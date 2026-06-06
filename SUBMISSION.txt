@@ -1,10 +1,10 @@
 SUBMISSION
 ----------
-Loom: [aquí va el link de tu video Loom - lo agregaremos después]
+Loom: https://www.loom.com/share/f4b80816bf7942628330505beecdf666
 
-Notion Report: https://app.notion.com/p/ATS-Report-Integration-Developer-Oracle-EBS-Business-Systems-Analyst-Oracle-EBS-2026-06-05-3767886a4f0081b9859cfbf8ed3fbf2c
+Notion Report: https://app.notion.com/p/ATS-Report-Job-A-Integration-Developer-Oracle-Ebs-Job-B-Business-Systems-Analyst-Oracle-Ebs-20-3777886a4f00811f90b8cd51d92a8be6
 
-Tiempo total invertido: 3 horas y 30 minutos incluyendo el aprendizaje de uso de nuevas plataformas y el registro de usuario en distintas
+Tiempo total invertido: 3 horas y 40 minutos incluyendo el aprendizaje de uso de nuevas plataformas y el registro de usuario en distintas
 plataformas necesarias
 
 Descripción del skill:

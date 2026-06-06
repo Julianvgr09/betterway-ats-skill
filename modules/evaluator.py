@@ -5,24 +5,24 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-def evaluate_candidate(candidate_name: str, candidate_text: str, job_a: str, job_b: str) -> dict:
+def evaluate_candidate(candidate_name: str, candidate_text: str, job_a: str, job_b: str, job_a_name: str, job_b_name: str) -> dict:
     """
     Evalúa un candidato contra dos descripciones de puesto usando Claude.
     Retorna un diccionario con scores, razones y recomendación.
     """
     client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
-    prompt = f"""Eres un experto en reclutamiento técnico especializado en Oracle EBS y tecnología empresarial.
+    prompt = f"""Eres un experto en reclutamiento técnico con amplia experiencia evaluando candidatos para todo tipo de roles.
 
 Analiza este perfil de candidato y evalúalo contra dos descripciones de puesto.
 
 === PERFIL DEL CANDIDATO ===
 {candidate_text}
 
-=== PUESTO A: Integration Developer — Oracle EBS ===
+=== PUESTO A: {job_a_name} ===
 {job_a}
 
-=== PUESTO B: Business Systems Analyst — Oracle EBS ===
+=== PUESTO B: {job_b_name} ===
 {job_b}
 
 Responde ÚNICAMENTE con un objeto JSON válido, sin texto adicional, sin markdown, sin explicaciones fuera del JSON:
@@ -51,9 +51,12 @@ Responde ÚNICAMENTE con un objeto JSON válido, sin texto adicional, sin markdo
 Reglas para los scores:
 - score: número entero del 0 al 100
 - prioridad: número entero del 1 al 3 (1=contactar primero, 2=contactar después, 3=no prioritario)
-- Si el candidato tiene experiencia técnica relevante aunque no sea exactamente Oracle EBS, puede tener score hasta 60
-- Evalúa potencial y transferibilidad de skills, no solo match exacto
-- Sé estricto: un score 80+ significa que cumple casi todos los requisitos del puesto"""
+- Evalúa el fit basándote únicamente en los requisitos descritos en cada puesto
+- Considera experiencia transferible y potencial de aprendizaje
+- Un score 80+ significa que cumple casi todos los requisitos del puesto
+- Un score 60-79 significa buen potencial con algunas brechas
+- Un score 40-59 significa fit parcial con brechas importantes
+- Un score menor a 40 significa que no cumple los requisitos mínimos"""
 
     message = client.messages.create(
         model="claude-haiku-4-5-20251001",
@@ -66,7 +69,6 @@ Reglas para los scores:
     try:
         result = json.loads(raw)
     except json.JSONDecodeError:
-        # Si Claude no retorna JSON limpio, intentar extraerlo
         start = raw.find("{")
         end = raw.rfind("}") + 1
         result = json.loads(raw[start:end])
@@ -75,7 +77,7 @@ Reglas para los scores:
     return result
 
 
-def evaluate_all_candidates(candidates: dict, job_a: str, job_b: str) -> list:
+def evaluate_all_candidates(candidates: dict, job_a: str, job_b: str, job_a_name: str, job_b_name: str) -> list:
     """
     Evalúa todos los candidatos y retorna lista ordenada por prioridad y score.
     """
@@ -85,12 +87,11 @@ def evaluate_all_candidates(candidates: dict, job_a: str, job_b: str) -> list:
     for i, (filename, text) in enumerate(candidates.items(), 1):
         print(f"  Evaluando {i}/{total}: {filename}")
         try:
-            result = evaluate_candidate(filename, text, job_a, job_b)
+            result = evaluate_candidate(filename, text, job_a, job_b, job_a_name, job_b_name)
             results.append(result)
         except Exception as e:
             print(f"  ✗ Error evaluando {filename}: {e}")
 
-    # Ordenar por prioridad (1 primero) y luego por score más alto
     results.sort(key=lambda x: (x.get("prioridad", 99), -max(
         x.get("puesto_a", {}).get("score", 0),
         x.get("puesto_b", {}).get("score", 0)
