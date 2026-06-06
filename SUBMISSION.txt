@@ -1,0 +1,13 @@
+SUBMISSION
+----------
+Loom: [aquí va el link de tu video Loom - lo agregaremos después]
+
+Notion Report: https://app.notion.com/p/ATS-Report-Integration-Developer-Oracle-EBS-Business-Systems-Analyst-Oracle-EBS-2026-06-05-3767886a4f0081b9859cfbf8ed3fbf2c
+
+Tiempo total invertido: 3 horas y 30 minutos incluyendo el aprendizaje de uso de nuevas plataformas y el registro de usuario en distintas
+plataformas necesarias
+
+Descripción del skill:
+Skill agéntico reutilizable que evalúa perfiles de candidatos contra
+descripciones de puesto usando IA (Claude Haiku), genera scores de fit
+y publica un reporte priorizado en Notion indicando a quién contactar primero.
